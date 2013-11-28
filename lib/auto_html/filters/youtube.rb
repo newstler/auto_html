@@ -8,8 +8,8 @@ AutoHtml.add_filter(:youtube).with(:width => 420, :height => 315, :frameborder =
     width = youtube_json["width"]
     height = youtube_json["height"]
     
-    width = options[:width]
-    height = options[:height]
+    #width = options[:width]
+    #height = options[:height]
     frameborder = options[:frameborder]
 		wmode = options[:wmode]
 		src = "//www.youtube.com/embed/#{youtube_id}"
