@@ -12,6 +12,11 @@ class ImageTest < Test::Unit::TestCase
     assert_equal 'http://blog.phusion.nl/2009/04/16/phusions-one-year-anniversary-gift-phusion-passenger-220/', result
   end
 
+  def test_dont_transform_a_formatted_image
+    result = auto_html('<img src="http://farm4.static.flickr.com/3459/3270173112_5099d3d730.jpg" alt=""/>'){ image({:alt => nil}) }
+    assert_equal '<img src="http://farm4.static.flickr.com/3459/3270173112_5099d3d730.jpg" alt=""/>', result
+  end
+
   def test_transform2
     result = auto_html('http://farm4.static.flickr.com/3459/3270173112_5099d3d730.jpg') { image({:alt => nil}) }
     assert_equal '<img src="http://farm4.static.flickr.com/3459/3270173112_5099d3d730.jpg" alt=""/>', result
@@ -47,9 +52,25 @@ class ImageTest < Test::Unit::TestCase
     assert_equal 'Which do you prefer, this one <img src="http://www.lockhartfineart.com/images/Rio_Grande_Frost.JPG" alt=""/>, or this one <img src="http://rors.org/images/rails.png" alt=""/>?', result
   end
 
+  def test_markdown_not_transformed
+    img_markdown = "![GOOG logo](http://www.google.com/images/srpr/logo11w.png)"
+    result = auto_html(img_markdown) { image }
+    assert_equal img_markdown, result
+  end
+
+  def test_image_tag_not_transformed
+    result = auto_html('<img src="http://img.skitch.com/20100910-1wrbg5749xe29ya5t3s85bnaiy.png" />') { image }
+    assert_equal '<img src="http://img.skitch.com/20100910-1wrbg5749xe29ya5t3s85bnaiy.png" />', result
+  end
+
   def test_https
     result = auto_html('https://img.skitch.com/20100910-1wrbg5749xe29ya5t3s85bnaiy.png') { image({:alt => nil}) }
     assert_equal '<img src="https://img.skitch.com/20100910-1wrbg5749xe29ya5t3s85bnaiy.png" alt=""/>', result
+  end
+
+  def test_proxy_option
+    result = auto_html('http://img.skitch.com/20100910-1wrbg5749xe29ya5t3s85bnaiy.png') { image({:alt => nil,:proxy => "https://proxy/?url="}) }
+    assert_equal '<img src="https://proxy/?url=http://img.skitch.com/20100910-1wrbg5749xe29ya5t3s85bnaiy.png" alt=""/>', result
   end
 
 end
