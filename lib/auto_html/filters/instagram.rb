@@ -5,7 +5,7 @@ require 'rexml/document'
 AutoHtml.add_filter(:instagram).with(:size => 640, :link_options => {}) do |text, options|
   regex = %r{https?:\/\/(www.)?instagr(am\.com|\.am)/p/.+}
     
-  text.gsub(regex) do
+  text.gsub(regex) do |match|
     case options[:size]
     when 'large'
        dimension = 612
@@ -17,7 +17,7 @@ AutoHtml.add_filter(:instagram).with(:size => 640, :link_options => {}) do |text
        dimension = 612
     end
     
-    uri = URI("http://api.instagram.com/oembed?url=#{text}")
+    uri = URI("http://api.instagram.com/oembed?url=#{match.to_s}")
     response = JSON.parse(Net::HTTP.get(uri))
 
     image = %{<img src="#{response["url"]}" alt="#{response["title"]}" width="#{dimension}" height="#{dimension}">}
