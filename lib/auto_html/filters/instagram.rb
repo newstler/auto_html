@@ -5,6 +5,8 @@ AutoHtml.add_filter(:instagram).with(:size => nil, :link_options => {}) do |text
   regex = /http:\/\/(instagr\.am\/p\/.*|instagram\.com\/p\/.*)/i
     
   text.gsub(regex) do
+    photo_id = $2
+
     case options[:size]
     when 'large'
        dimension = 612
@@ -16,7 +18,9 @@ AutoHtml.add_filter(:instagram).with(:size => nil, :link_options => {}) do |text
        dimension = 612
     end
     
-    uri = URI("http://api.instagram.com/oembed?url=#{text}")
+    # uri = URI("http://api.instagram.com/oembed?url=#{text}")
+    uri = URI("http://instagr.am/p/#{ photo_id }/media/?size=#{ dimension }")
+
     response = JSON.parse(Net::HTTP.get(uri))
 
     image = %{<img src="#{response["url"]}" alt="#{response["title"]}" width="#{dimension}" height="#{dimension}">}
