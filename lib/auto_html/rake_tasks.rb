@@ -14,7 +14,7 @@ namespace :auto_html do
     observed_attributes = column_names.select { |c| c=~/#{suffix}$/ }.map { |c| c.gsub(/#{suffix}$/, '')}
 
     i = 0
-    klass.find_each do |item|
+    klass.each do |item|
       observed_attributes.each do |field|
         item.send("#{field}=", item.send(field))
       end
