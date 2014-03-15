@@ -2,7 +2,7 @@ require 'uri'
 require 'net/http'
 
 AutoHtml.add_filter(:instagram).with(:size => nil, :link_options => {}) do |text, options|
-  regex = /https?:\/\/[w\.]*instagram\.[^\/]*\/([^?]*)/is
+  regex = /http:\/\/(instagr\.am\/p\/.*|instagram\.com\/p\/.*)/i
     
   text.gsub(regex) do
     case options[:size]
